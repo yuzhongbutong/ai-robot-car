@@ -1,0 +1,10 @@
+<div id="app">
+  <div class="loading-layer" *ngIf="loading$ | async">
+    <div class="spinner-border text-light">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div>{{loading$ | async}}</div>
+  <button (click)="setLoading(true)">aaaaaaaaa</button>
+  <router-outlet></router-outlet>
+</div>

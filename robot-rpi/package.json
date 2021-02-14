@@ -1,0 +1,13 @@
+{
+  "name": "robot-rpi",
+  "version": "1.0.0",
+  "description": "A raspberry pi management system.",
+  "main": "index.js",
+  "author": "Joey",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "bootstrap": "^4.5.3",
+    "jquery": "^3.5.1"
+  }
+}

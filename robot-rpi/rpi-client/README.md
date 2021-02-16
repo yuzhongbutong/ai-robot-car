@@ -1,6 +1,16 @@
-# RpiClient
+# rpi-client
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.7.
+
+```bash
+yarn install
+
+yarn start
+
+yarn build
+
+yarn test
+```
 
 ## Development server
 

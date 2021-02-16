@@ -3,13 +3,14 @@
 
 from wsgiref.simple_server import make_server
 from os import getenv
-import crypt
+# import crypt
 from hmac import compare_digest as compare_hash
 from datetime import timedelta
 from flask import Flask, render_template, request, session, redirect, jsonify
 from dotenv import load_dotenv
 from flask_httpauth import HTTPTokenAuth
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import BadSignature, SignatureExpired
 from src.config import settings
 from src.utils.utils import run_command
 from src.utils import message
@@ -29,15 +30,15 @@ def generate_token(user_id):
 
 
 def verify_auth(username, cleartext):
-    result = run_command('sudo cat /etc/shadow | grep -w ' + username)
-    if result:
-        cryptedpasswd = result.split(':')[1]
-        is_correct = compare_hash(crypt.crypt(
-            cleartext, cryptedpasswd), cryptedpasswd)
-        if is_correct:
+    # result = run_command('sudo cat /etc/shadow | grep -w ' + username)
+    # if result:
+    #     cryptedpasswd = result.split(':')[1]
+    #     is_correct = compare_hash(crypt.crypt(
+    #         cleartext, cryptedpasswd), cryptedpasswd)
+    #     if is_correct:
             return True
 
-    return False
+    # return False
 
 
 @auth.verify_token

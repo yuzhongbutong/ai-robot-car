@@ -7,7 +7,6 @@
     align-content: center;
 
     .card {
-        height: 370px;
         margin-top: auto;
         margin-bottom: auto;
         width: 400px;
@@ -62,6 +61,7 @@
         color: black;
         background-color: #ffc312;
         width: 100px;
+        margin-top: 5px;
     }
 
     .login_btn:hover {
@@ -81,5 +81,6 @@
         margin-top: 10px;
         color: red;
         display: inline-block;
+        word-break: break-word;
     }
 }

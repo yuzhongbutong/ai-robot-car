@@ -1,6 +1,7 @@
 .history
 .vscode
 
+/files/config.cfg
 venv
 *.pyc
 /node_modules

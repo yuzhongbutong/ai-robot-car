@@ -71,11 +71,11 @@ def get_humiture():
     return {'temp': temperature, 'humi': humidity}
 
 
-if __name__ == '__main__':
-    try:
-        config.read("config.cfg")
-        connect()
-        publish()
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt!")
-        gpio.cleanup()
+# if __name__ == '__main__':
+try:
+    config.read("config.cfg")
+    connect()
+    publish()
+except KeyboardInterrupt:
+    print("KeyboardInterrupt!")
+    gpio.cleanup()

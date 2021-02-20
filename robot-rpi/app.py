@@ -3,42 +3,22 @@
 
 from wsgiref.simple_server import make_server
 from os import getenv
-# import crypt
-from hmac import compare_digest as compare_hash
 from datetime import timedelta
-from flask import Flask, render_template, request, session, redirect, jsonify
+from flask import Flask, render_template, request, session, redirect, jsonify, send_from_directory
 from dotenv import load_dotenv
 from flask_httpauth import HTTPTokenAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from src.config import settings
-from src.utils.utils import run_command
-from src.utils import message
+from src.utils.utils import read_config, write_config
+from src.utils import message, constant
+from src.service.login_service import LoginService
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = settings.SECRET_KEY
 app.config.from_object(settings)
 auth = HTTPTokenAuth(scheme=settings.TOKEN_SCHEME)
-
-
-def generate_token(user_id):
-    serializer = Serializer(settings.SECRET_KEY,
-                            expires_in=settings.TOKEN_EXPIRE)
-    token = serializer.dumps({'id': user_id}).decode('ascii')
-    return settings.TOKEN_SCHEME + ' ' + token
-
-
-def verify_auth(username, cleartext):
-    # result = run_command('sudo cat /etc/shadow | grep -w ' + username)
-    # if result:
-    #     cryptedpasswd = result.split(':')[1]
-    #     is_correct = compare_hash(crypt.crypt(
-    #         cleartext, cryptedpasswd), cryptedpasswd)
-    #     if is_correct:
-            return True
-
-    # return False
 
 
 @auth.verify_token
@@ -62,9 +42,10 @@ def login():
     body = request.json
     username = body['username']
     cleartext = body['password']
-    is_correct = verify_auth(username, cleartext)
+    login_service = LoginService()
+    is_correct = login_service.verify_auth(username, cleartext)
     if is_correct:
-        token = generate_token(username)
+        token = login_service.generate_token(username)
         session['username'] = username
         app.permanent_session_lifetime = timedelta(minutes=30)
         return jsonify({'status': 200, 'message': message.MSG_LOGIN_SUCCESSFUL,
@@ -72,13 +53,29 @@ def login():
     return jsonify({'status': 401, 'message': message.MSG_LOGIN_FAILURE}), 401
 
 
-# @app.route('/lib/<path:filename>')
-# def get_lib(filename):
-#     return send_from_directory(app.root_path + settings.STATIC_LIB, filename)
+@app.route('/api/query-settings', methods=['POST'])
+@auth.login_required
+def read_settings():
+    mqtt_local = read_config(constant.CONFIG_MQTT_LOCAL)
+    mqtt_watson = read_config(constant.CONFIG_MQTT_WATSON)
+    return jsonify({'data': {'mqtt_local': mqtt_local, 'mqtt_watson': mqtt_watson}})
+
+
+@app.route('/api/save-settings', methods=['POST'])
+@auth.login_required
+def write_settings():
+    if write_config(request.json):
+        return jsonify({'status': 200, 'message': message.MSG_SAVE_SETTINGS_SUCCESSFUL})
+    return jsonify({'status': 500, 'message': message.MSG_SAVE_SETTINGS_FAILED}), 500
+
+
+###########################
+@app.route('/lib/<path:filename>')
+def get_lib(filename):
+    return send_from_directory(app.root_path + '/node_modules', filename)
 
 
 @app.route('/login2')
-@auth.login_required
 def login2():
     return render_template('login.html')
 
@@ -95,16 +92,16 @@ def index():
 def auth2():
     username = request.form['username']
     cleartext = request.form['password']
-    result = run_command('sudo cat /etc/shadow | grep -w ' + username)
-    if result:
-        cryptedpasswd = result.split(':')[1]
-        is_correct = compare_hash(crypt.crypt(
-            cleartext, cryptedpasswd), cryptedpasswd)
-        if is_correct:
-            session['username'] = username
-            app.permanent_session_lifetime = timedelta(minutes=30)
-            return redirect('/')
-    return render_template('login.html', error={'status': 401, 'message': 'Authorization failure!'})
+    # result = run_command('sudo cat /etc/shadow | grep -w ' + username)
+    # if result:
+    #     cryptedpasswd = result.split(':')[1]
+    #     is_correct = compare_hash(crypt.crypt(
+    #         cleartext, cryptedpasswd), cryptedpasswd)
+    #     if is_correct:
+    session['username'] = username
+    app.permanent_session_lifetime = timedelta(minutes=30)
+    return redirect('/')
+    # return render_template('login.html', error={'status': 401, 'message': 'Authorization failure!'})
 
 
 if __name__ == '__main__':

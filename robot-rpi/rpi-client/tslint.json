@@ -147,6 +147,10 @@
       "element",
       "app",
       "kebab-case"
+    ],
+    "linebreak-style": [
+      true,
+      "LF"
     ]
   }
 }

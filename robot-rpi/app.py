@@ -75,7 +75,7 @@ def get_lib(filename):
     return send_from_directory(app.root_path + '/node_modules', filename)
 
 
-@app.route('/login2')
+@app.route('/login')
 def login2():
     return render_template('login.html')
 

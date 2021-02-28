@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login.component/login.component';
 import { SettingsComponent } from './settings.component/settings.component';
 import { AppInterceptor } from 'src/utils/app.interceptor';
+import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AppInterceptor } from 'src/utils/app.interceptor';
     HttpClientModule,
     FontAwesomeModule,
     AppRoutingModule,
-    StoreModule.forRoot({ common: commonReducer })
+    StoreModule.forRoot({ common: commonReducer }),
+    SidebarModule.forRoot()
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }],
   bootstrap: [AppComponent]

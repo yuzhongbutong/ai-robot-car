@@ -20,7 +20,7 @@ export class AppInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             tap((event: any) => {
                 if (event.status >= 500) {
-                    // Todo
+                    // TODO
                 }
             }, (error: any) => {
                 if (error.status === 401) {

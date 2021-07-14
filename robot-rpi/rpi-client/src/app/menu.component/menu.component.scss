@@ -91,3 +91,22 @@ h2 {
   background-color: #545555;
   color: #fff;
 }
+
+@media (max-width: 575.98px) {
+  .peak-side-menu {
+    ::ng-deep aside {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .peak-side-menu {
+    ::ng-deep aside {
+      transform: translateX(-100%) translateX(50px);
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+}

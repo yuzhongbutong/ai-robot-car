@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from 'src/utils/auth.guard';
 import { LoginComponent } from './login.component/login.component';
-import { SettingsComponent } from './settings.component/settings.component';
+import { MenuComponent } from './menu.component/menu.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: SettingsComponent,
+    component: MenuComponent,
     canActivate: [AuthGuard]
   }
 ];

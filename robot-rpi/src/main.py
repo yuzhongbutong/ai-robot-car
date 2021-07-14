@@ -8,10 +8,10 @@ import time
 import json
 import random
 
-from controller import car as car
-from controller import humiture
-from controller import buzzer
-from controller import ultrasonic
+from service import car as car
+from service import humiture
+from service import buzzer
+from service import ultrasonic
 
 GPIO_CAR = [18, 23, 20, 21, 24, 25, 12, 16]
 GPIO_DHT11 = 4

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "robot-client",
+			"path": "robot-client"
+		},
+		{
+			"name": "robot-rpi",
+			"path": "robot-rpi"
+		},
+		{
+			"name": "rpi-client",
+			"path": "robot-rpi\\rpi-client"
+		}
+	],
+	"settings": {}
+}

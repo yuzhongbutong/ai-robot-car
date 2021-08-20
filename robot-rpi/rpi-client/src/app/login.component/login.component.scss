@@ -34,11 +34,13 @@
         top: -45px;
     }
 
-    .input-group-prepend span {
+    .input-group-prepend {
         width: 50px;
         background-color: #ffc312;
         color: black;
         border: 0 !important;
+        display: block;
+        text-align: center;
     }
 
     input:focus {

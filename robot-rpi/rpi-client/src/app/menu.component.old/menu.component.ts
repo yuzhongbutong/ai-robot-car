@@ -13,8 +13,8 @@ import { delay } from 'rxjs/operators';
 })
 export class MenuComponent implements OnInit {
 
-  // @ViewChild(MatSidenav)
-  // sidenav!: MatSidenav;
+  @ViewChild(MatSidenav)
+  sidenav!: MatSidenav;
 
   constructor(private observer: BreakpointObserver) { }
 
@@ -28,17 +28,17 @@ export class MenuComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.observer
-    //   .observe(['(max-width: 800px)'])
-    //   .pipe(delay(1))
-    //   .subscribe((res) => {
-    //     if (res.matches) {
-    //       this.sidenav.mode = 'over';
-    //       this.sidenav.close();
-    //     } else {
-    //       this.sidenav.mode = 'side';
-    //       this.sidenav.open();
-    //     }
-    //   });
+    this.observer
+      .observe(['(max-width: 800px)'])
+      .pipe(delay(1))
+      .subscribe((res) => {
+        if (res.matches) {
+          this.sidenav.mode = 'over';
+          this.sidenav.close();
+        } else {
+          this.sidenav.mode = 'side';
+          this.sidenav.open();
+        }
+      });
   }
 }

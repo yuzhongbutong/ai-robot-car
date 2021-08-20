@@ -7,12 +7,13 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { delay } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MainComponent implements OnInit {
 
+  isMenuFloat = false;
   // @ViewChild(MatSidenav)
   // sidenav!: MatSidenav;
 
@@ -28,17 +29,17 @@ export class MenuComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.observer
-    //   .observe(['(max-width: 800px)'])
-    //   .pipe(delay(1))
-    //   .subscribe((res) => {
-    //     if (res.matches) {
-    //       this.sidenav.mode = 'over';
-    //       this.sidenav.close();
-    //     } else {
-    //       this.sidenav.mode = 'side';
-    //       this.sidenav.open();
-    //     }
-    //   });
+    this.observer
+      .observe(['(min-width: 992px)'])
+      .pipe(delay(1))
+      .subscribe((res) => {
+        if (res.matches) {
+          this.isMenuFloat = false;
+        }
+      });
+  }
+
+  toggleMenuFloat() {
+    this.isMenuFloat = !this.isMenuFloat;
   }
 }

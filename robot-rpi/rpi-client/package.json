@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 5050 --proxy-config proxy.conf.json",
-    "build": "ng build --prod",
+    "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -44,6 +45,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "webpack-bundle-analyzer": "^4.4.2"
   }
 }

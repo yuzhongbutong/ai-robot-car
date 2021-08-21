@@ -15,7 +15,7 @@ from src.utils import message, constant
 from src.service.login_service import LoginService
 
 load_dotenv()
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='templates/static')
 app.secret_key = settings.SECRET_KEY
 app.config.from_object(settings)
 auth = HTTPTokenAuth(scheme=settings.TOKEN_SCHEME)

@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/utils/auth.guard';
 import { LoginComponent } from './login.component/login.component';
 import { MainComponent } from './main.component/main.component';
-import { MenuComponent } from './menu.component.old/menu.component';
+import { IntroductionComponent } from './main.component/introduction.component/introduction.component';
+import { SettingsComponent } from './main.component/settings.component/settings.component';
 
 const routes: Routes = [
   {
@@ -13,17 +14,22 @@ const routes: Routes = [
   {
     path: '',
     component: MainComponent,
-    canActivate: [AuthGuard]
-  },
-
-
-  {
-    path: 'menu',
-    component: MenuComponent
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'introduction',
+        component: IntroductionComponent
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'introduction'
+      }
+    ]
   }
-
-
-  
 ];
 
 @NgModule({

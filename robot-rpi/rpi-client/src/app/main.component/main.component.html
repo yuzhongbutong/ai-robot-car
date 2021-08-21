@@ -1,55 +1,54 @@
 <div class="d-flex h-100 athena-main-root">
     <nav class="navbar navbar-expand-md text-uppercase text-white">
         <div class="container-fluid d-flex">
-            <a class="navbar-brand text-light d-lg-none" href="#" (click)="toggleMenuFloat()">
+            <a class="navbar-brand text-light d-lg-none" href="javascript:void(0)" (click)="toggleMenuFloat()">
                 <fa-icon size="lg" [icon]="['fas', 'bars']"></fa-icon>
             </a>
             <a class="navbar-brand text-light" href="#">
                 <img class="img-logo" src="assets/images/logo.png" alt="">Raspberry Pi</a>
             <div></div>
-            <a href="#">
+            <a>
                 <img class="img-user" src="assets/images/user_default.png" alt="User"></a>
         </div>
     </nav>
     <section class="d-flex">
         <aside class="athena-bg h-100 text-white" [ngClass]="{'athena-main-menu-float': isMenuFloat}">
             <header class="text-center">
-                <img class="rounded-circle w-50" src="assets/images/avatar.jpg" />
-                <h4 class="my-2 d-none d-lg-block">Configuration</h4>
-                <small class="d-none d-lg-block">Software Engineer</small>
-                <div class="dropdown-divider"></div>
-                <ul class="text-start">
-                    <li>
-                        <a class="text-light nav-link" href="#">
-                            <fa-icon [icon]="['fas', 'home']"></fa-icon><span class="ms-1">Home</span></a>
-                    </li>
-                    <li>
-                        <a class="text-light nav-link" href="#">
-                            <fa-icon [icon]="['fas', 'server']"></fa-icon>
-                            <span class="ms-1">MQTT</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-light nav-link" href="#">
-                            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-                            <span class="ms-1">About</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="dropdown-divider"></div>
-                <ul class="text-start">
-                    <li>
-                        <a class="text-light nav-link" href="#">
-                            <fa-icon [icon]="['fas', 'question-circle']"></fa-icon>
-                            <span class="ms-1">Help</span>
-                        </a>
-                    </li>
-                </ul>
+                <img class="rounded-circle w-50" src="assets/images/avatar.png" />
+                <h4 class="my-2 d-none d-lg-block">Raspbian OS</h4>
+                <small class="d-none d-lg-block">Jessie</small>
             </header>
+            <div class="dropdown-divider"></div>
+            <ul class="text-start">
+                <li>
+                    <a class="text-light nav-link" routerLink="/introduction" routerLinkActive="active">
+                        <fa-icon [icon]="['fas', 'home']"></fa-icon><span class="ms-1">Home</span></a>
+                </li>
+                <li>
+                    <a class="text-light nav-link" routerLink="/settings" routerLinkActive="active">
+                        <fa-icon [icon]="['fas', 'user-cog']"></fa-icon>
+                        <span class="ms-1">Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="text-light nav-link">
+                        <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+                        <span class="ms-1">About</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="dropdown-divider"></div>
+            <ul class="text-start">
+                <li>
+                    <a class="text-light nav-link">
+                        <fa-icon [icon]="['fas', 'question-circle']"></fa-icon>
+                        <span class="ms-1">Help</span>
+                    </a>
+                </li>
+            </ul>
         </aside>
         <article>
             <div [ngClass]="{'athena-main-content-blocked': isMenuFloat}" (click)="toggleMenuFloat()"></div>
-            <div style="background-color: red;" class="h-100">123456789abcdefghigklmnopqrstuvwxyz</div>
             <router-outlet></router-outlet>
         </article>
     </section>

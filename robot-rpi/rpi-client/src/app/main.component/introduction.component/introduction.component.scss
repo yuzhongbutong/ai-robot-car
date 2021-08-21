@@ -1,0 +1,28 @@
+#carouselExampleCaptions {
+    flex: 1;
+    display: flex;
+    background-image: linear-gradient(to bottom, transparent, #ebebeb);
+
+    div.carousel-inner {
+        flex: 1;
+        display: flex;
+
+        div.carousel-item.active {
+            flex: 1;
+            margin-right: 0;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    }
+
+    .carousel-control-prev {
+        background-image: linear-gradient(to left, transparent, white);
+        filter: contrast(0.5);
+    }
+
+    .carousel-control-next {
+        background-image: linear-gradient(to right, transparent, white);
+        filter: contrast(0.5);
+    }
+}

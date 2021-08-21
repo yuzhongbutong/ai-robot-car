@@ -43,30 +43,30 @@
                     font-size: 0.7rem;
                     color: lightgrey;
                 }
+            }
 
-                div, .dropdown-divider {
-                    width: 85%;
-                    border-top-style: solid;
-                    border-top-color: rgba(0, 0, 0, 0.12);
-                    background-color: rgba(255, 255, 255, 0.5);
-                    margin: 10px auto;
+            div, .dropdown-divider {
+                width: 85%;
+                border-top-style: solid;
+                border-top-color: rgba(0, 0, 0, 0.12);
+                background-color: rgba(255, 255, 255, 0.5);
+                margin: 10px auto;
+            }
+
+            ul {
+                padding: 0;
+                list-style: none;
+
+                a {
+                    padding-left: 3rem;
                 }
 
-                ul {
-                    padding: 0;
-                    list-style: none;
+                a:hover {
+                    background-color: #9ad0d4;
+                }
 
-                    a {
-                        padding-left: 3rem;
-                    }
-
-                    a:hover {
-                        background-color: #a7d1d5;
-                    }
-
-                    a:active {
-                        background-color: #9ad0d4;
-                    }
+                a.active {
+                    background-color: #a7d1d5;
                 }
             }
         }
@@ -110,16 +110,16 @@
                         margin-top: 10px;
                         width: 70% !important;
                     }
+                }
     
-                    ul {
-                        a {
-                            padding-left: 1rem;
-                            text-align: center;
-                            font-size: x-large;
-                            
-                            span {
-                                display: none;
-                            }
+                ul {
+                    a {
+                        padding-left: 1rem;
+                        text-align: center;
+                        font-size: x-large;
+                        
+                        span {
+                            display: none;
                         }
                     }
                 }

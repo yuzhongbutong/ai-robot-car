@@ -1,7 +1,6 @@
 import subprocess
 from os import path
 from configparser import ConfigParser
-from src.utils.constant import CONFIG_PATH
 
 
 def run_command(command):
@@ -16,7 +15,7 @@ def run_command(command):
 
 
 def read_config(section, key=None):
-    file_name = path.join(path.dirname(__file__), '../../', CONFIG_PATH)
+    file_name = path.join(path.dirname(__file__), '../../files/config.cfg')
     config_parser = ConfigParser()
     config_parser.read(file_name)
     if config_parser.has_section(section):
@@ -31,7 +30,7 @@ def write_config(source):
     if source is None:
         return False
     config_parser = ConfigParser()
-    file_name = path.join(path.dirname(__file__), '../../', CONFIG_PATH)
+    file_name = path.join(path.dirname(__file__), '../../files/config.cfg')
     config_parser.read(file_name)
     for section, options in source.items():
         if not config_parser.has_section(section):

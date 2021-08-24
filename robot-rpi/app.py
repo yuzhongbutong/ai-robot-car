@@ -4,26 +4,52 @@
 from wsgiref.simple_server import make_server
 from os import getenv
 from datetime import timedelta
-from flask import Flask, render_template, request, session, redirect, jsonify, send_from_directory
+from flask import Flask, render_template, request, session, redirect, jsonify
 from dotenv import load_dotenv
 from flask_httpauth import HTTPTokenAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
-from src.config import settings
-from src.utils.utils import read_config, write_config
-from src.utils import message, constant
+import sqlite3
+from contextlib import closing
+from src.config import settings as config
+from src.utils import message
 from src.service.login_service import LoginService
+from src.service.db_service import DatabaseService
 
 load_dotenv()
-app = Flask(__name__, template_folder='templates', static_folder='templates/static')
-app.secret_key = settings.SECRET_KEY
-app.config.from_object(settings)
-auth = HTTPTokenAuth(scheme=settings.TOKEN_SCHEME)
+app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='')
+app.secret_key = config.SECRET_KEY
+app.config.from_object(config)
+auth = HTTPTokenAuth(scheme=config.TOKEN_SCHEME)
+
+
+# @app.before_request
+# def before_request():
+#     app.db = connect_db()
+ 
+ 
+# @app.teardown_request
+# def after_request(response):
+#     app.db.close()
+#     return response
+ 
+ 
+@app.before_first_request
+def before_first_request():
+    with closing(connect_db()) as db:
+        cursor = db.cursor()
+        db_service = DatabaseService()
+        exist = db_service.is_exist_table(cursor)
+        if not(exist):
+            with app.open_resource(config.DB_INIT_SCRIPT) as file:
+                cursor.executescript(file.read().decode())
+            db.commit()
+        cursor.close()
 
 
 @auth.verify_token
 def verify_token(token):
-    serializer = Serializer(settings.SECRET_KEY)
+    serializer = Serializer(config.SECRET_KEY)
     try:
         serializer.loads(token)
     except (SignatureExpired, BadSignature):
@@ -56,58 +82,44 @@ def login():
 @app.route('/api/query-settings', methods=['POST'])
 @auth.login_required
 def read_settings():
-    mqtt_local = read_config(constant.CONFIG_MQTT_LOCAL)
-    mqtt_watson = read_config(constant.CONFIG_MQTT_WATSON)
-    return jsonify({'data': {'mqtt_local': mqtt_local, 'mqtt_watson': mqtt_watson}})
+    with closing(connect_db()) as db:
+        db_service = DatabaseService()
+        result = db_service.query_settings(db)
+    return jsonify(result)
 
 
 @app.route('/api/save-settings', methods=['POST'])
 @auth.login_required
 def write_settings():
-    if write_config(request.json):
-        return jsonify({'status': 200, 'message': message.MSG_SAVE_SETTINGS_SUCCESSFUL})
+    with closing(connect_db()) as db:
+        db_service = DatabaseService()
+        if db_service.write_config(db, request.json):
+            return jsonify({'status': 200, 'message': message.MSG_SAVE_SETTINGS_SUCCESSFUL})
     return jsonify({'status': 500, 'message': message.MSG_SAVE_SETTINGS_FAILED}), 500
-
-
-###########################
-@app.route('/lib/<path:filename>')
-def get_lib(filename):
-    return send_from_directory(app.root_path + '/node_modules', filename)
-
-
-@app.route('/login')
-def login2():
-    return render_template('login.html')
 
 
 @app.route('/')
 def index():
     if session.get('username'):
-        return render_template('index.html', title='test-title')
+        return render_template('index.html')
     else:
         return redirect('/login')
 
 
-@app.route('/auth', methods=['POST'])
-def auth2():
-    username = request.form['username']
-    cleartext = request.form['password']
-    # result = run_command('sudo cat /etc/shadow | grep -w ' + username)
-    # if result:
-    #     cryptedpasswd = result.split(':')[1]
-    #     is_correct = compare_hash(crypt.crypt(
-    #         cleartext, cryptedpasswd), cryptedpasswd)
-    #     if is_correct:
-    session['username'] = username
-    app.permanent_session_lifetime = timedelta(minutes=30)
-    return redirect('/')
-    # return render_template('login.html', error={'status': 401, 'message': 'Authorization failure!'})
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('index.html')
+
+
+def connect_db():
+    return sqlite3.connect(config.DB_NAME)
 
 
 if __name__ == '__main__':
     mode = getenv('ENV_MODE')
+    print('----------Run in main[' + mode + ']----------')
     if mode == 'watson':
         server = make_server('0.0.0.0', 5000, app)
         server.serve_forever()
     else:
-        app.run(debug=settings.DEBUG, host='0.0.0.0', port=5000)
+        app.run(debug=config.DEBUG, host='0.0.0.0', port=5000)

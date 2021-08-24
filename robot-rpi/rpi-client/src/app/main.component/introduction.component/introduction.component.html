@@ -7,7 +7,7 @@
         </div>
         <div class="carousel-inner">
             <div *ngFor="let image of images; let index = index" [class]="{'active': currentIndex == index}" 
-                class="carousel-item" style="background-image: url(../../../assets/images/introduction/{{image}});">
+                class="carousel-item" style="background-image: url(/assets/images/introduction/{{image}});">
                 <!-- <img src="assets/images/introduction/{{image}}" class="d-block w-100" alt="{{image}}"> -->
             </div>
         </div>

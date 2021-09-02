@@ -1,1 +1,10 @@
-<div>ccccccccccc</div>
+<div class="athena-settings-root">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 0}" (click)="tapActiveIndex = 0">Local</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 1}" (click)="tapActiveIndex = 1">Watson</a>
+        </li>
+    </ul>
+</div>

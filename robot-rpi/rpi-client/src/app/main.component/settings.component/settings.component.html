@@ -1,10 +1,67 @@
 <div class="athena-settings-root">
-    <ul class="nav nav-tabs">
+    <!-- <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 0}" (click)="tapActiveIndex = 0">Local</a>
+            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 0}"
+                (click)="tapActiveIndex = 0">Local</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 1}" (click)="tapActiveIndex = 1">Watson</a>
+            <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 1}"
+                (click)="tapActiveIndex = 1">Watson</a>
         </li>
     </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade" [ngClass]="{'show active': tapActiveIndex == 0}">
+            <div class="card">
+                <div class="card-body">aaaaaaaaaa
+                    </div>
+                    </div>
+        </div>
+        <div class="tab-pane fade" [ngClass]="{'show active': tapActiveIndex == 1}">bbb</div>
+    </div> -->
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 0}"
+                        (click)="tapActiveIndex = 0">Local</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 1}"
+                        (click)="tapActiveIndex = 1">Watson</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-pane fade d-flex athena-settings-card-parent"
+                [ngClass]="{'show active': tapActiveIndex == 0}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3 row">
+                            <label for="mqttUrlID" class="col-sm-3 col-form-label">MQTT URL</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <span class="input-group-text">mqtt://</span>
+                                    <input type="text" class="form-control" id="mqttUrlID"
+                                        placeholder="xxx.xxx.xxx.xxx:xxxx">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="userNameID" class="col-sm-3 col-form-label">User Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="userNameID">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="passwordID" class="col-sm-3 col-form-label">Password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="passwordID">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" [ngClass]="{'show active': tapActiveIndex == 1}">bbb</div>
+        </div>
+    </div>
 </div>

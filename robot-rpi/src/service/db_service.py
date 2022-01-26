@@ -30,7 +30,7 @@ class DatabaseService:
         cursor = db.cursor()
         for _, item in enumerate(config.SETTINGS_ITEMS):
             if item in source:
-                sql = 'REPLACE INTO TBL_SETTINGS VALUES (\'' + item + '\', \'{}\')'
+                sql = 'REPLACE INTO TBL_SETTINGS VALUES (\'' + item + '\', \'' + json.dumps(source[item]) + '\')'
                 cursor.execute(sql)
                 row_count += cursor.rowcount
         db.commit()

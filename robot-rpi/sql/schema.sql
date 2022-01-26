@@ -4,4 +4,4 @@ CREATE TABLE TBL_SETTINGS(
     CONTENT JSON NOT NULL
 );
 
-INSERT INTO TBL_SETTINGS (TYPE, CONTENT) VALUES ('internal', '{"host":"localhost","port":"1883"}');
+INSERT INTO TBL_SETTINGS (TYPE, CONTENT) VALUES ('internal', '{"mqttUrl":"localhost:1883"}');

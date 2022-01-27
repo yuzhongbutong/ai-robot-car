@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class IntroductionComponent {
 
-  images: Array<String> = ['1.jpg', '2.jpg', '3.jpg', '4.jpg'];
+  images: Array<String> = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.png', '6.jpg', '7.jpeg', '8.jpg'];
   currentIndex: number = 0;
 
   private timer;

@@ -1,7 +1,11 @@
 #carouselExampleCaptions {
     flex: 1;
     display: flex;
-    background-image: linear-gradient(to bottom, transparent, #ebebeb);
+    // background-image: linear-gradient(to bottom, transparent, #ebebeb);
+
+    .carousel-indicators > button {
+        background-color: #e0e0e0;
+    }
 
     div.carousel-inner {
         flex: 1;

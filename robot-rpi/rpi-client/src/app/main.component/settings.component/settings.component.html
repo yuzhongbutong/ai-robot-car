@@ -3,29 +3,39 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 0}"
-                        (click)="tapActiveIndex = 0">Local</a>
+                    <a class="nav-link connect-spinner-parent" href="javascript: void(0)"
+                        [ngClass]="{'active': tapActiveIndex == 1}" (click)="tapActiveIndex = 1">Internal <span
+                            *ngIf="connectActiveIndex == 1" class="bg-success"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript: void(0)" [ngClass]="{'active': tapActiveIndex == 1}"
-                        (click)="tapActiveIndex = 1">Watson</a>
+                    <a class="nav-link connect-spinner-parent" href="javascript: void(0)"
+                        [ngClass]="{'active': tapActiveIndex == 2}" (click)="tapActiveIndex = 2">Watson <span
+                            *ngIf="connectActiveIndex == 2" class="bg-success"></span></a>
                 </li>
             </ul>
         </div>
         <div class="card-body">
-            <div *ngIf="tapActiveIndex == 0" class="tab-pane fade d-flex athena-settings-card-parent show active">
+            <div *ngIf="tapActiveIndex == 1" class="tab-pane fade d-flex card-parent show active">
                 <div class="card">
+                    <div class="card-img-top card-img-top-internal">
+                        <img src="assets/images/card-internal.png" alt="Internal">
+                    </div>
                     <div class="card-body" [formGroup]="internalForm">
+                        <h5 class="card-title text-center mb-3">Broker Connection</h5>
                         <div class="mb-3 row">
-                            <label for="internalMqttUrlID" class="col-sm-3 col-form-label">MQTT URL</label>
+                            <label for="internalHostID" class="col-sm-3 col-form-label">Host</label>
                             <div class="col-sm-9">
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text">mqtt://</span>
-                                    <input id="internalMqttUrlID" formControlName="mqttUrl" type="text" maxlength="100"
-                                        required class="form-control"
-                                        [ngClass]="{'is-invalid': internalForm.get('mqttUrl')?.invalid}"
-                                        placeholder="xxx.xxx.xxx.xxx:xxxx">
-                                </div>
+                                <input id="internalHostID" formControlName="host" type="text" maxlength="100" required
+                                    class="form-control" [ngClass]="{'is-invalid': internalForm.get('host')?.invalid}"
+                                    placeholder="xxx.xxx.xxx.xxx">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="internalPortID" class="col-sm-3 col-form-label">Port</label>
+                            <div class="col-sm-9">
+                                <input id="internalPortID" formControlName="port" type="text" maxlength="5"
+                                    class="form-control" [ngClass]="{'is-invalid': internalForm.get('port')?.invalid}"
+                                    placeholder="1883">
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -44,26 +54,32 @@
                                     [ngClass]="{'is-invalid': internalForm.get('password')?.invalid}">
                             </div>
                         </div>
-                        <div class="mb-3 text-center">
-                            <button type="button" class="btn btn-primary me-3" (click)="saveInternal()">
+                        <div class="mb-3 text-center d-sm-block d-grid gap-2">
+                            <button type="button" class="btn btn-success mx-sm-3" (click)="connectInternal()">
+                                <fa-icon [icon]="['fas', 'charging-station']"></fa-icon> Connect
+                            </button>
+                            <button type="button" class="btn btn-primary mx-sm-3" (click)="saveInternal()">
                                 <fa-icon [icon]="['fas', 'save']"></fa-icon> Save
                             </button>
-                            <button type="button" class="btn btn-secondary ms-3" (click)="resetInternal()">
+                            <button type="button" class="btn btn-secondary mx-sm-3" (click)="resetInternal()">
                                 <fa-icon [icon]="['fas', 'times-circle']"></fa-icon> Cancel
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div *ngIf="tapActiveIndex == 1" class="tab-pane fade d-flex athena-settings-card-parent show active">
+            <div *ngIf="tapActiveIndex == 2" class="tab-pane fade d-flex card-parent show active">
                 <div class="card">
+                    <div class="card-img-top card-img-top-watson">
+                        <img src="assets/images/card-watson.png" alt="Watson">
+                    </div>
                     <div class="card-body" [formGroup]="watsonForm">
+                        <h5 class="card-title text-center mb-3">Watson Connection</h5>
                         <div class="mb-3 row">
                             <label for="watsonOrgIdID" class="col-sm-3 col-form-label">Org Id</label>
                             <div class="col-sm-9">
-                                <input id="watsonOrgIdID" formControlName="orgId" type="text" maxlength="100" required
-                                    class="form-control" [ngClass]="{'is-invalid': watsonForm.get('orgId')?.invalid}"
-                                    placeholder="xxx.xxx.xxx.xxx:xxxx">
+                                <input id="watsonOrgIdID" formControlName="orgId" type="text" maxlength="10" required
+                                    class="form-control" [ngClass]="{'is-invalid': watsonForm.get('orgId')?.invalid}">
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -82,11 +98,14 @@
                                     [ngClass]="{'is-invalid': watsonForm.get('password')?.invalid}">
                             </div>
                         </div>
-                        <div class="mb-3 text-center">
-                            <button type="button" class="btn btn-primary me-3" (click)="saveWatson()">
+                        <div class="mb-3 text-center d-sm-block d-grid gap-2">
+                            <button type="button" class="btn btn-success mx-sm-3" (click)="connectWatson()">
+                                <fa-icon [icon]="['fas', 'charging-station']"></fa-icon> Connect
+                            </button>
+                            <button type="button" class="btn btn-primary mx-sm-3" (click)="saveWatson()">
                                 <fa-icon [icon]="['fas', 'save']"></fa-icon> Save
                             </button>
-                            <button type="button" class="btn btn-secondary ms-3" (click)="resetWatson()">
+                            <button type="button" class="btn btn-secondary mx-sm-3" (click)="resetWatson()">
                                 <fa-icon [icon]="['fas', 'times-circle']"></fa-icon> Cancel
                             </button>
                         </div>

@@ -1,13 +1,62 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
 .athena-settings-root {
     padding: 10px;
+
+    .card-header {
+        .connect-spinner-parent {
+            position: relative;
+
+            span {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                box-shadow: 0 0 8px #198754;
+                position: absolute;
+                right: 3px;
+            }
+        }
+    }
+
+    .card-parent {
+        flex-flow: column;
+        align-items: center;
+    }
+
+    .card-parent > div.card {
+        max-width: 500px;
+        width: 100%;
+
+        div.card-img-top {
+            text-align: center;
+            padding: 10px;
+
+            img {
+                height: 60px;
+            }
+        }
+
+        div.card-img-top-internal {
+            background-image: linear-gradient(to right, #c5efe6, #75dcc8, #c5efe6);
+        }
+
+        div.card-img-top-watson {
+            background-image: linear-gradient(to right, #d3e0fc, #a9bdea, #d3e0fc);
+        }
+    }
 }
 
-.athena-settings-card-parent {
-    flex-flow: column;
-    align-items: center;
-}
-
-.athena-settings-card-parent > div.card {
-    max-width: 500px;
-    width: 100%;
+@include media-breakpoint-down(sm) {
+    .athena-settings-root {
+        .card-parent > div.card {
+            div[class^="card-img-top"] {
+                img {
+                    height: 40px;
+                }
+            }
+        }
+    }
 }

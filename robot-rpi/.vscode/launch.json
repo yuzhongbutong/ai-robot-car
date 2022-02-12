@@ -8,14 +8,14 @@
             "module": "flask",
             "env": {
                 "FLASK_ENV": "development",
-                "FLASK_DEBUG": "1",
                 "RPI_DEVICE": "false"
             },
             "args": [
                 "run",
                 "--no-debugger"
             ],
-            "jinja": true
+            "jinja": true,
+            "console": "internalConsole"
         }
     ]
 }

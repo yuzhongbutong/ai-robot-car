@@ -1,8 +1,8 @@
 from os import getenv
-from . import local, watson
+from . import development, production
 
-mode = getenv('ENV_MODE')
-if mode == 'watson':
-    settings = watson
+env = getenv('FLASK_ENV', 'production')
+if env == 'production':
+    settings = production
 else:
-    settings = local
+    settings = development

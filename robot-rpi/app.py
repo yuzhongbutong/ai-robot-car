@@ -1,6 +1,8 @@
 # !/usr/bin/python
 # coding:utf-8
 
+import logging
+import sys
 from wsgiref.simple_server import make_server
 from os import getenv
 from datetime import timedelta
@@ -14,32 +16,22 @@ from contextlib import closing
 from src.config import settings as config
 from src.utils import message
 from src.service.login_service import LoginService
-from src.service.db_service import DatabaseService
+from src.service.settings_service import DatabaseService
 
-load_dotenv()
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='')
 app.secret_key = config.SECRET_KEY
 app.config.from_object(config)
 auth = HTTPTokenAuth(scheme=config.TOKEN_SCHEME)
-
-
-# @app.before_request
-# def before_request():
-#     app.db = connect_db()
- 
- 
-# @app.teardown_request
-# def after_request(response):
-#     app.db.close()
-#     return response
  
  
 @app.before_first_request
 def before_first_request():
     with closing(connect_db()) as db:
         cursor = db.cursor()
-        db_service = DatabaseService()
-        exist = db_service.is_exist_table(cursor)
+        settings_service = DatabaseService()
+        exist = settings_service.is_exist_table(cursor)
         if not(exist):
             with app.open_resource(config.DB_INIT_SCRIPT) as file:
                 cursor.executescript(file.read().decode())
@@ -83,8 +75,8 @@ def login():
 @auth.login_required
 def read_settings():
     with closing(connect_db()) as db:
-        db_service = DatabaseService()
-        result = db_service.query_settings(db)
+        settings_service = DatabaseService()
+        result = settings_service.query_settings(db)
     return jsonify(result)
 
 
@@ -92,10 +84,22 @@ def read_settings():
 @auth.login_required
 def write_settings():
     with closing(connect_db()) as db:
-        db_service = DatabaseService()
-        if db_service.write_config(db, request.json):
+        settings_service = DatabaseService()
+        if settings_service.write_settings(db, request.json):
             return jsonify({'status': 200, 'message': message.MSG_SAVE_SETTINGS_SUCCESSFUL})
-    return jsonify({'status': 500, 'message': message.MSG_SAVE_SETTINGS_FAILED}), 500
+        else:
+            return jsonify({'status': 500, 'message': message.MSG_SAVE_SETTINGS_FAILED})
+
+
+@app.route('/api/connect-settings', methods=['POST'])
+@auth.login_required
+def connect_settings():
+    settings_service = DatabaseService()
+    client_type = settings_service.connect_settings(request.json)
+    if client_type is None:
+        return jsonify({'status': 500, 'message': message.MSG_TEST_SETTINGS_FAILED})
+    else:
+        return jsonify({'status': 200, 'client_type': client_type, 'message': message.MSG_TEST_SETTINGS_SUCCESSFUL})
 
 
 @app.route('/')
@@ -116,10 +120,11 @@ def connect_db():
 
 
 if __name__ == '__main__':
-    mode = getenv('ENV_MODE')
-    print('----------Run in main[' + mode + ']----------')
-    if mode == 'watson':
+    load_dotenv()
+    env = getenv('FLASK_ENV', 'production')
+    logging.debug('----------Run in main[' + env + ']----------')
+    if env == 'production':
         server = make_server('0.0.0.0', 5000, app)
         server.serve_forever()
     else:
-        app.run(debug=config.DEBUG, host='0.0.0.0', port=5000)
+        app.run(host='0.0.0.0', port=5000)

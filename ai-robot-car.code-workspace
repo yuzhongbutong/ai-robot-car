@@ -4,10 +4,10 @@
 			"path": "robot-client"
 		},
 		{
-			"path": "robot-rpi"
+			"path": "robot-rpi/rpi-client"
 		},
 		{
-			"path": "robot-rpi/rpi-client"
+			"path": "robot-rpi"
 		}
 	],
 	"settings": {}

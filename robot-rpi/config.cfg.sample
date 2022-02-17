@@ -1,8 +1,0 @@
-[mqtt-local]
-host = xxx.xxx.xxx.xxx
-port = xxxx
-
-[mqtt-watson]
-org-id = xxxxx
-username = xxxxx
-password = xxxxx

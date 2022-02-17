@@ -1,6 +1,7 @@
 {
   "name": "robot-client",
   "version": "0.1.0",
+  "author": "Joey",
   "private": true,
   "dependencies": {
     "@babel/core": "7.1.0",

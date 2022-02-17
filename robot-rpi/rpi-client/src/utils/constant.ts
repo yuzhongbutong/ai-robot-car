@@ -6,8 +6,17 @@ export class Constant {
         CONNECT_SETTINGS: '/api/connect-settings'
     };
 
-    public static KEY = {
+    public static CLIENT_TYPE = {
         INTERNAL: 'internal',
         WATSON: 'watson'
+    }
+
+    public static MESSAGE_TYPE = {
+        RECEIVE: 'receive',
+        PUBLISH: 'publish'
+    }
+
+    public static SOCKET = {
+        NAMESPACE_CAR: '/car'
     }
 }

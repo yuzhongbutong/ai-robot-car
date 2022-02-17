@@ -17,6 +17,7 @@ import { LoginComponent } from './login.component/login.component';
 import { MainComponent } from './main.component/main.component';
 import { IntroductionComponent } from './main.component/introduction.component/introduction.component';
 import { SettingsComponent } from './main.component/settings.component/settings.component';
+import { SocketService } from 'src/service/socketio.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { SettingsComponent } from './main.component/settings.component/settings.
     FontAwesomeModule,
     StoreModule.forRoot({ common: commonReducer })
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

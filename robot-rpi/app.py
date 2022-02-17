@@ -1,12 +1,14 @@
 # !/usr/bin/python
 # coding:utf-8
+# @Author : Joey
 
 import logging
 import sys
+from flask_socketio import SocketIO
 from wsgiref.simple_server import make_server
 from os import getenv
 from datetime import timedelta
-from flask import Flask, render_template, request, session, redirect, jsonify
+from flask import Flask, current_app, render_template, request, session, redirect, jsonify
 from dotenv import load_dotenv
 from flask_httpauth import HTTPTokenAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -19,13 +21,19 @@ from src.service.login_service import LoginService
 from src.service.settings_service import DatabaseService
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='')
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+app = Flask(__name__, template_folder='templates',
+            static_folder='static', static_url_path='')
 app.secret_key = config.SECRET_KEY
 app.config.from_object(config)
 auth = HTTPTokenAuth(scheme=config.TOKEN_SCHEME)
- 
- 
+socketio = SocketIO(app)
+
+with app.app_context():
+    current_app.extensions['socketio'] = socketio
+
+
 @app.before_first_request
 def before_first_request():
     with closing(connect_db()) as db:
@@ -117,6 +125,15 @@ def page_not_found(e):
 
 def connect_db():
     return sqlite3.connect(config.DB_NAME)
+
+
+@socketio.on('connect', namespace=config.SOCKET_NAMESPACE)
+def event_connect():
+    token = request.args.get('token')
+    if token and token.startswith(config.TOKEN_SCHEME + ' '):
+        token = token.split(config.TOKEN_SCHEME + ' ')[1]
+    if not verify_token(token):
+        return False
 
 
 if __name__ == '__main__':

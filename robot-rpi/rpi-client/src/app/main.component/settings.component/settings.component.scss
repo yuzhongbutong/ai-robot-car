@@ -21,41 +21,45 @@
         }
     }
 
-    .card-parent {
+    div.card-img-top {
+        height: 65px;
+        text-align: center;
+        padding: 10px;
+        display: flex;
         flex-flow: column;
         align-items: center;
+        justify-content: center;
+
+        img {
+            height: 100%;
+        }
     }
 
-    .card-parent > div.card {
-        max-width: 500px;
-        width: 100%;
+    div.card-img-top-internal {
+        background-image: linear-gradient(to right, #c5efe6, #75dcc8, #c5efe6);
+    }
 
-        div.card-img-top {
-            text-align: center;
-            padding: 10px;
+    div.card-img-top-watson {
+        background-image: linear-gradient(to right, #d3e0fc, #a9bdea, #d3e0fc);
+    }
 
-            img {
-                height: 60px;
-            }
-        }
+    .message-parent {
+        display: flex;
+        flex-flow: column;
 
-        div.card-img-top-internal {
-            background-image: linear-gradient(to right, #c5efe6, #75dcc8, #c5efe6);
-        }
-
-        div.card-img-top-watson {
-            background-image: linear-gradient(to right, #d3e0fc, #a9bdea, #d3e0fc);
+        div.card {
+            flex: 1;
         }
     }
 }
 
 @include media-breakpoint-down(sm) {
     .athena-settings-root {
-        .card-parent > div.card {
-            div[class^="card-img-top"] {
-                img {
-                    height: 40px;
-                }
+        div.card-img-top {
+            height: 45px;
+
+            fa-icon {
+                font-size: 10px;
             }
         }
     }

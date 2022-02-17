@@ -1,4 +1,9 @@
-SECRET_KEY = 'Joey'
+# !/usr/bin/python
+# coding:utf-8
+# @Author : Joey
+
+# The SECRET_KEY must be a string of 8 characters.
+SECRET_KEY = 'JoeyChou'
 TOKEN_SCHEME = 'JWT'
 TOKEN_EXPIRE = 1800
 
@@ -14,3 +19,8 @@ MQTT_WATSON_DEVICE_ID = 'car'
 MQTT_WATSON_EVENT_CONTROL = 'control'
 MQTT_WATSON_EVENT_HUMITURE = 'humiture'
 MQTT_WATSON_TOPIC = 'iot-2/type/' + MQTT_WATSON_DEVICE_TYPE + '/id/' + MQTT_WATSON_DEVICE_ID + '/evt/{event}/fmt/json'
+
+SOCKET_NAMESPACE = '/car'
+SOCKET_EVENT_MESSAGE = 'message'
+SOCKET_TYPE_PUBLISH = 'publish'
+SOCKET_TYPE_RECEIVE = 'receive'

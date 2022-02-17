@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { delay, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Constant } from 'src/utils/constant';
+import { SocketService } from 'src/service/socketio.service';
 
 @Component({
   selector: 'app-settings',
@@ -13,8 +14,12 @@ import { Constant } from 'src/utils/constant';
 export class SettingsComponent implements OnInit {
 
   tapActiveIndex = 1;
-  connectActiveIndex = 0;
   toastActiveIndex = 0;
+  activeClient: any = null;
+  clientType = Constant.CLIENT_TYPE;
+  messageType = Constant.MESSAGE_TYPE;
+  internalMessages: any[] = [];
+  watsonMessages: any[] = [];
   internalForm: FormGroup = new FormGroup({
     host: new FormControl('', [
       Validators.required,
@@ -48,18 +53,25 @@ export class SettingsComponent implements OnInit {
   private originData: any = {};
   private toastSubject = new Subject();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private socket: SocketService) {
     this.toastSubject.pipe(switchMap(value => of(value).pipe(delay(3000)))).subscribe(() => this.toastActiveIndex = 0);
   }
 
   ngOnInit(): void {
+    this.socket.connect();
+    this.socket.onConnect()
+      .pipe(mergeMap(() => this.socket.onMessage()))
+      .pipe(map((data) => {
+        const { client_type } = data;
+        if (Constant.CLIENT_TYPE.INTERNAL === client_type) {
+          this.internalMessages.push(data);
+        } else if (Constant.CLIENT_TYPE.WATSON === client_type) {
+          this.watsonMessages.push(data);
+        }
+      })).subscribe();
     this.http.post(Constant.API.QUERY_SETTINGS, {}).pipe(map((response: any) => {
       const { client_type, data } = response
-      if (client_type === Constant.KEY.INTERNAL) {
-        this.connectActiveIndex = 1;
-      } else if (client_type === Constant.KEY.WATSON) {
-        this.connectActiveIndex = 2;
-      }
+      this.activeClient = client_type;
       this.originData = data;
       const { internal, watson } = data;
       this.internalForm.patchValue(internal);
@@ -75,11 +87,7 @@ export class SettingsComponent implements OnInit {
         const { status, client_type } = response;
         if (status === 200) {
           this.showToast(1);
-          if (client_type === Constant.KEY.INTERNAL) {
-            this.connectActiveIndex = 1;
-          } else {
-            this.connectActiveIndex = 0;
-          }
+          this.activeClient = client_type;
         } else {
           this.showToast(2);
         }
@@ -114,11 +122,7 @@ export class SettingsComponent implements OnInit {
         const { status, client_type } = response;
         if (status === 200) {
           this.showToast(1);
-          if (client_type === Constant.KEY.WATSON) {
-            this.connectActiveIndex = 2;
-          } else {
-            this.connectActiveIndex = 0;
-          }
+          this.activeClient = client_type;
         } else {
           this.showToast(2);
         }

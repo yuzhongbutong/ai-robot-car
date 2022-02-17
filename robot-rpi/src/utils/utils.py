@@ -1,3 +1,7 @@
+# !/usr/bin/python
+# coding:utf-8
+# @Author : Joey
+
 import subprocess
 from os import path
 from configparser import ConfigParser

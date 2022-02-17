@@ -1,3 +1,7 @@
+# !/usr/bin/python
+# coding:utf-8
+# @Author : Joey
+
 from hmac import compare_digest as compare_hash
 from os import getenv
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer

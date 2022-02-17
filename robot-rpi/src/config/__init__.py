@@ -1,3 +1,7 @@
+# !/usr/bin/python
+# coding:utf-8
+# @Author : Joey
+
 from os import getenv
 from . import development, production
 

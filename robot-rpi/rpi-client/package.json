@@ -1,6 +1,7 @@
 {
   "name": "rpi-client",
   "version": "0.0.0",
+  "author": "Joey",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 5050 --proxy-config proxy.conf.json",
@@ -31,6 +32,7 @@
     "@ngrx/store": "^12.4.0",
     "bootstrap": "^5.1.0",
     "rxjs": "~6.6.0",
+    "socket.io-client": "^4.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
@@ -40,6 +42,7 @@
     "@angular/compiler-cli": "~12.2.0",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",
+    "@types/socket.io-client": "^3.0.0",
     "gulp": "^4.0.2",
     "jasmine-core": "~3.8.0",
     "karma": "~6.3.0",

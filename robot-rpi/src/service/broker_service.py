@@ -2,11 +2,21 @@
 # coding:utf-8
 # @Author : Joey
 
+import json
 import logging
+import random
+import threading
 import time
 import paho.mqtt.client as mqtt
 from flask import current_app
 from src.config import settings as config
+
+####################
+from src.components.car import Car
+from src.components.buzzer import Buzzer
+from src.components.humiture import Humiture
+from src.components.ultrasonic import Ultrasonic
+####################
 
 
 def singleton(cls, *args, **kwargs):
@@ -19,11 +29,19 @@ def singleton(cls, *args, **kwargs):
 
     return _singleton
 
+
 @singleton
 class BrokerService:
     def __init__(self):
         self.__client = None
         self.__socketio = current_app.extensions.get('socketio')
+
+        ####################
+        self.__my_car = Car(config.GPIO_CAR)
+        self.__my_humiture = Humiture(config.GPIO_DHT11)
+        self.__my_buzzer = Buzzer(config.GPIO_BUZZER)
+        self.__my_ultrasonic = Ultrasonic(config.GPIO_HC)
+        ####################
 
     def __on_connect(self, client, userdata, flags, rc):
         topic = config.MQTT_WATSON_TOPIC.format(
@@ -35,9 +53,16 @@ class BrokerService:
         logging.debug('[on_subscribe]qos=%d' % granted_qos)
 
     def __on_message(self, client, userdata, msg):
-        payload = str(msg.payload.decode('utf-8'))
+        payload = msg.payload.decode('utf-8')
         logging.debug('[on_message]Topic=%s, Message=%s' %
                       (msg.topic, payload))
+
+        ####################
+        data = json.loads(payload)
+        if 'car' in data:
+            self.__my_car.move_car(data['car']['direction'], self.__my_ultrasonic, self.__my_buzzer)
+        ####################
+
         client_type = client._userdata['client_type']
         data = {
             'client_type': client_type,
@@ -47,8 +72,6 @@ class BrokerService:
         }
         self.__socketio.emit(config.SOCKET_EVENT_MESSAGE,
                              data, namespace=config.SOCKET_NAMESPACE)
-
-        self.publish(config.MQTT_WATSON_TOPIC.format(event=config.MQTT_WATSON_EVENT_HUMITURE), '{"aa":1001}')
 
     def __on_publish(self, client, userdata, mid):
         logging.debug('[on_publish]mid=%s' % mid)
@@ -75,11 +98,35 @@ class BrokerService:
                 time.sleep(1)
                 if client.is_connected():
                     self.__client = client
+                    self.__collect_humiture()
                     return True
         except Exception as e:
             print(e)
             pass
         return False
+
+    def __collect_humiture(self):
+        def test_humiture():
+            temperature = random.randint(15, 35)
+            humidity = random.randint(35, 90)
+            return {'temp': temperature, 'humi': humidity}
+            
+        def execute_collect():
+            ####################
+            ht_data = self.__my_humiture.get_humiture()
+            ####################
+            
+            ####################
+            # ht_data = test_humiture()
+            ####################
+            if ht_data is not None:
+                topic = config.MQTT_WATSON_TOPIC.format(event=config.MQTT_WATSON_EVENT_HUMITURE)
+                self.publish(topic, json.dumps(ht_data))
+                timer = threading.Timer(5, execute_collect)
+                timer.start()
+        global timer
+        timer = threading.Timer(5, execute_collect)
+        timer.start()
 
     def get_client_type(self):
         if self.__client and self.__client.is_connected():

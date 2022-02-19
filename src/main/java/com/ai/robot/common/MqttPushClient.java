@@ -29,12 +29,29 @@ public class MqttPushClient {
 	}
 
 	public void connect() throws MqttSecurityException, MqttException {
-		MqttClient client = new MqttClient(this.dotenv.get("MQTT_ADDRESS"), RobotConstant.MQTT_CLIENT_ID, new MemoryPersistence());
+		String uri = null;
+		String userName = null;
+		String password = null;
+		String clientId = null;
+		String clientType = this.dotenv.get("MQTT_CLIENT_TYPE", RobotConstant.MQTT_CLIENT_TYPE_INTERNAL);
+		if (RobotConstant.MQTT_CLIENT_TYPE_INTERNAL.equals(clientType)) {
+			uri = this.dotenv.get("MQTT_INTERNAL_ADDRESS");
+			userName = this.dotenv.get("MQTT_INTERNAL_USERNAME");
+			password = this.dotenv.get("MQTT_INTERNAL_PASSWORD", "");
+			clientId = RobotConstant.MQTT_CLIENT_ID;
+		} else if (RobotConstant.MQTT_CLIENT_TYPE_WATSON.equals(clientType)) {
+			String orgId = this.dotenv.get("MQTT_WATSON_ORG_ID");
+			uri = String.format(RobotConstant.MQTT_WATSON_URI, orgId);
+			userName = "a-" + orgId + "-" + this.dotenv.get("MQTT_WATSON_USERNAME");
+			password = this.dotenv.get("MQTT_WATSON_PASSWORD", "");
+			clientId = "a:" + orgId + ":" + RobotConstant.MQTT_CLIENT_ID;
+		}
+		MqttClient client = new MqttClient(uri, clientId, new MemoryPersistence());
 		setClient(client);
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setCleanSession(true);
-		options.setUserName(this.dotenv.get("MQTT_USERNAME"));
-		options.setPassword(this.dotenv.get("MQTT_PASSWORD").toCharArray());
+		options.setUserName(userName);
+		options.setPassword(password.toCharArray());
 		options.setConnectionTimeout(1000);
 		options.setKeepAliveInterval(2000);
 		client.connect(options);

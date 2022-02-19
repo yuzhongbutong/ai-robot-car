@@ -40,7 +40,8 @@ public class SocketHandlerController {
 	@OnConnect
 	public void onConnect(SocketIOClient socketIOClient) throws MqttException {
 		clients.add(socketIOClient);
-		mqttPushClient.subscribe(RobotConstant.MQTT_TOPIC_HT, new MqttCallback() {
+		String topic = String.format(RobotConstant.MQTT_WATSON_TOPIC, RobotConstant.MQTT_WATSON_EVENT_HUMITURE);
+		mqttPushClient.subscribe(topic, new MqttCallback() {
 
 			@Override
 			public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -70,7 +71,8 @@ public class SocketHandlerController {
 	@OnEvent(value = RobotConstant.SOCKET_EVENT_CAR)
 	public void onEventCar(SocketIOClient socketIOClient, AckRequest ackRequest, String data)
 			throws MqttPersistenceException, MqttException {
-		mqttPushClient.publish(RobotConstant.MQTT_TOPIC_CAR, data);
+		String topic = String.format(RobotConstant.MQTT_WATSON_TOPIC, RobotConstant.MQTT_WATSON_EVENT_CONTROL);
+		mqttPushClient.publish(topic, data);
 	}
 
 	@OnEvent(value = RobotConstant.SOCKET_EVENT_AUDIO)

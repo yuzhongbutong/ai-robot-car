@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { EMPTY, interval, of, Subject } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-introduction',
@@ -9,48 +11,92 @@ export class IntroductionComponent {
 
   images: Array<String> = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.png', '6.jpg', '7.jpeg', '8.jpg'];
   currentIndex: number = 0;
+  carouselCurrentIndex: number = -1;
+  carouselTargetIndex: number = -1;
 
-  private timer;
   private isPauseRolling: boolean = false;
+  private carouselSubject = new Subject<number>();
 
   constructor() {
     const imageLength = this.images.length;
-    this.timer = setInterval(() => {
-      if (this.isPauseRolling) {
-        return;
-      }
-      if (this.currentIndex >= imageLength - 1) {
-        this.currentIndex = 0;
-      } else {
-        this.currentIndex++;
-      }
-    }, 2000);
+    this.carouselSubject.pipe(
+      map((target: number) => {
+        this.carouselCurrentIndex = this.currentIndex;
+        this.carouselTargetIndex = target;
+        return target;
+      }),
+      delay(500),
+      map((target: number) => {
+        this.currentIndex = target;
+        this.carouselCurrentIndex = -1;
+        this.carouselTargetIndex = -1;
+      })
+    ).subscribe();
+
+    interval(2000)
+      .pipe(
+        switchMap(() => {
+          if (this.isPauseRolling) {
+            return EMPTY;
+          } else {
+            const next = this.currentIndex >= imageLength - 1 ? 0 : this.currentIndex + 1;
+            return of(next);
+          }
+        }),
+        map((target: number) => {
+          this.carouselCurrentIndex = this.currentIndex;
+          this.carouselTargetIndex = target;
+          return target;
+        }),
+        delay(500),
+        map((target: number) => {
+          this.currentIndex = target;
+          this.carouselCurrentIndex = -1;
+          this.carouselTargetIndex = -1;
+        })
+      ).subscribe()
   }
 
-  ngOnDestroy() {
-    if (this.timer) {
-      clearInterval(this.timer);
+  switchCarousel(index: number): string {
+    const criterion = this.images.length - 1;
+    if (this.carouselCurrentIndex === index) {
+      if (this.carouselTargetIndex === 0 && this.carouselCurrentIndex === criterion) {
+        return 'carousel-item-start';
+      } else if (this.carouselTargetIndex === criterion && this.carouselCurrentIndex === 0) {
+        return 'carousel-item-end';
+      } else if (this.carouselTargetIndex > this.carouselCurrentIndex) {
+        return 'carousel-item-start';
+      } else {
+        return 'carousel-item-end';
+      }
+    } else if (this.carouselTargetIndex === index) {
+      if (this.carouselTargetIndex === 0 && this.carouselCurrentIndex === criterion) {
+        return 'carousel-item-next';
+      } else if (this.carouselTargetIndex === criterion && this.carouselCurrentIndex === 0) {
+        return 'carousel-item-prev';
+      } else if (this.carouselTargetIndex > this.carouselCurrentIndex) {
+        return 'carousel-item-next';
+      } else {
+        return 'carousel-item-prev';
+      }
     }
+    return '';
   }
 
   showCurrent(index: number) {
-    this.currentIndex = index;
+    if (this.currentIndex != index) {
+      this.carouselSubject.next(index);
+    }
   }
 
   previous() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    } else {
-      this.currentIndex = this.images.length - 1;
-    }
+    const index = this.currentIndex > 0 ? this.currentIndex - 1 : this.images.length - 1;
+    this.carouselSubject.next(index);
   }
 
   next() {
-    if (this.currentIndex >= this.images.length - 1) {
-      this.currentIndex = 0;
-    } else {
-      this.currentIndex++;
-    }
+    const index = this.currentIndex >= this.images.length - 1 ? 0 : this.currentIndex + 1;
+    this.carouselSubject.next(index);
   }
 
   pauseRolling(isPause: boolean) {

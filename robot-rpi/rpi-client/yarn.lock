@@ -1710,6 +1710,13 @@ alphanum-sort@^1.0.2:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
+angular-resize-event@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/angular-resize-event/-/angular-resize-event-3.1.1.tgz#4b3535dc2c4882fa1c7f159a1a2e319ed4ca35cd"
+  integrity sha512-7kJr3GGZ+7z0a8qhmKKAmCW4U8WZZNtOVSes5uWbA6AnKK9CeAAeblYk/JN0fALwadg/VF48zmKWovuZKvqQBg==
+  dependencies:
+    tslib "^2.3.0"
+
 ansi-colors@4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-4.1.1.tgz#cbb9ae256bf750af1eab344f229aa27fe94ba348"

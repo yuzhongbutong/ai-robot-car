@@ -11,6 +11,10 @@ export class SocketService {
 
     connect() {
         const token = sessionStorage.getItem('token');
+        if (this.socketio && this.socketio.connected) {
+            this.socketio.disconnect();
+            this.socketio.destroy();
+        }
         this.socketio = io(Constant.SOCKET.NAMESPACE_CAR, { query: { token } });
 
         this.socketio.on('connect', () => {

@@ -18,6 +18,7 @@ import { MainComponent } from './main.component/main.component';
 import { IntroductionComponent } from './main.component/introduction.component/introduction.component';
 import { SettingsComponent } from './main.component/settings.component/settings.component';
 import { SocketService } from 'src/service/socketio.service';
+import { AngularResizeEventModule } from 'angular-resize-event';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SocketService } from 'src/service/socketio.service';
     AppRoutingModule,
     BrowserAnimationsModule,
     FontAwesomeModule,
-    StoreModule.forRoot({ common: commonReducer })
+    StoreModule.forRoot({ common: commonReducer }),
+    AngularResizeEventModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }, SocketService],
   bootstrap: [AppComponent]

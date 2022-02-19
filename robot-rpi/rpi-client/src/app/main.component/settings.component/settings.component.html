@@ -4,18 +4,18 @@
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
                     <a class="nav-link connect-spinner-parent" href="javascript: void(0)"
-                        [ngClass]="{'active': tapActiveIndex == 1}" (click)="tapActiveIndex = 1">Internal <span
-                            *ngIf="activeClient == clientType.INTERNAL" class="bg-success"></span></a>
+                        [ngClass]="{'active': tapActiveIndex === 1}" (click)="tapActiveIndex = 1">Internal <span
+                            *ngIf="activeClient === clientType.INTERNAL" class="bg-success"></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link connect-spinner-parent" href="javascript: void(0)"
-                        [ngClass]="{'active': tapActiveIndex == 2}" (click)="tapActiveIndex = 2">Watson <span
-                            *ngIf="activeClient == clientType.WATSON" class="bg-success"></span></a>
+                        [ngClass]="{'active': tapActiveIndex === 2}" (click)="tapActiveIndex = 2">Watson <span
+                            *ngIf="activeClient === clientType.WATSON" class="bg-success"></span></a>
                 </li>
             </ul>
         </div>
         <div class="card-body">
-            <div *ngIf="tapActiveIndex == 1" class="tab-pane fade d-flex show active">
+            <div *ngIf="tapActiveIndex === 1" class="tab-pane fade d-flex show active">
                 <div class="container-fluid g-0">
                     <div class="row g-3">
                         <div class="col-xl-6">
@@ -23,7 +23,7 @@
                                 <div class="card-img-top card-img-top-internal">
                                     <img src="assets/images/card-internal.png" alt="Internal">
                                 </div>
-                                <div class="card-body" [formGroup]="internalForm">
+                                <div class="card-body" [formGroup]="internalForm" (resized)="onInternalResized($event)">
                                     <h5 class="card-title text-center mb-3">Broker Connection</h5>
                                     <div class="mb-3 row">
                                         <label for="internalHostID" class="col-sm-3 col-form-label">Host</label>
@@ -81,9 +81,9 @@
                                 <div class="card-img-top card-img-top-internal">
                                     <fa-icon [icon]="['fas', 'comments']" size="3x"></fa-icon>
                                 </div>
-                                <div class="card-body">
-                                    <div *ngFor="let item of internalMessages let index=index">
-                                        <p>[{{index + 1}}] {{item.topic}}</p>
+                                <div class="card-body overflow-auto" [style.height.px]="internalMessageHeight">
+                                    <div *ngFor="let item of internalMessages; let index = index; let length = count">
+                                        <p>[{{length - index}}] {{item.topic}}</p>
                                         <p><span class="text-capitalize rounded text-white p-1"
                                                 [ngClass]="{'bg-primary': item.message_type === messageType.RECEIVE, 'bg-success': item.message_type === messageType.PUBLISH}">{{item.message_type}}:</span>
                                             {{item.payload}}</p>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="tapActiveIndex == 2" class="tab-pane fade d-flex show active">
+            <div *ngIf="tapActiveIndex === 2" class="tab-pane fade d-flex show active">
                 <div class="container-fluid g-0">
                     <div class="row g-3">
                         <div class="col-xl-6">
@@ -102,7 +102,7 @@
                                 <div class="card-img-top card-img-top-watson">
                                     <img src="assets/images/card-watson.png" alt="Watson">
                                 </div>
-                                <div class="card-body" [formGroup]="watsonForm">
+                                <div class="card-body" [formGroup]="watsonForm" (resized)="onWatsonResized($event)">
                                     <h5 class="card-title text-center mb-3">Watson Connection</h5>
                                     <div class="mb-3 row">
                                         <label for="watsonOrgIdID" class="col-sm-3 col-form-label">Org Id</label>
@@ -147,9 +147,9 @@
                                 <div class="card-img-top card-img-top-watson">
                                     <fa-icon [icon]="['fas', 'comments']" size="3x"></fa-icon>
                                 </div>
-                                <div class="card-body">
-                                    <div *ngFor="let item of watsonMessages let index=index">
-                                        <p>[{{index + 1}}] {{item.topic}}</p>
+                                <div class="card-body overflow-auto" [style.height.px]="watsonMessageHeight">
+                                    <div *ngFor="let item of watsonMessages; let index = index; let length = count">
+                                        <p>[{{length - index}}] {{item.topic}}</p>
                                         <p><span class="text-capitalize rounded text-white p-1"
                                                 [ngClass]="{'bg-primary': item.message_type === messageType.RECEIVE, 'bg-success': item.message_type === messageType.PUBLISH}">{{item.message_type}}:</span>
                                             {{item.payload}}</p>
@@ -163,7 +163,7 @@
         </div>
     </div>
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
-        <div class="toast fade" [ngClass]="{'show': toastActiveIndex == 1}">
+        <div class="toast fade" [ngClass]="{'show': toastActiveIndex === 1}">
             <div class="toast-header">
                 <fa-icon [icon]="['fas', 'check-circle']" size="2x" class="text-success"></fa-icon>
                 <strong class="me-auto ms-2">Saved Successfully</strong>
@@ -174,7 +174,7 @@
                 The data has been saved successfully.
             </div>
         </div>
-        <div class="toast fade" [ngClass]="{'show': toastActiveIndex == 2}">
+        <div class="toast fade" [ngClass]="{'show': toastActiveIndex === 2}">
             <div class="toast-header">
                 <fa-icon [icon]="['fas', 'times-circle']" size="2x" class="text-danger"></fa-icon>
                 <strong class="me-auto ms-2">Processing failed</strong>

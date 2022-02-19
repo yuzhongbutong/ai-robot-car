@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { delay, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Constant } from 'src/utils/constant';
 import { SocketService } from 'src/service/socketio.service';
+import { ResizedEvent } from 'angular-resize-event';
 
 @Component({
   selector: 'app-settings',
@@ -20,6 +21,8 @@ export class SettingsComponent implements OnInit {
   messageType = Constant.MESSAGE_TYPE;
   internalMessages: any[] = [];
   watsonMessages: any[] = [];
+  internalMessageHeight = 0;
+  watsonMessageHeight = 0;
   internalForm: FormGroup = new FormGroup({
     host: new FormControl('', [
       Validators.required,
@@ -64,9 +67,9 @@ export class SettingsComponent implements OnInit {
       .pipe(map((data) => {
         const { client_type } = data;
         if (Constant.CLIENT_TYPE.INTERNAL === client_type) {
-          this.internalMessages.push(data);
+          this.internalMessages.unshift(data);
         } else if (Constant.CLIENT_TYPE.WATSON === client_type) {
-          this.watsonMessages.push(data);
+          this.watsonMessages.unshift(data);
         }
       })).subscribe();
     this.http.post(Constant.API.QUERY_SETTINGS, {}).pipe(map((response: any) => {
@@ -77,6 +80,14 @@ export class SettingsComponent implements OnInit {
       this.internalForm.patchValue(internal);
       this.watsonForm.patchValue(watson);
     })).subscribe();
+  }
+
+  onInternalResized(event: ResizedEvent) {
+    this.internalMessageHeight = event.newRect.height;
+  }
+
+  onWatsonResized(event: ResizedEvent) {
+    this.watsonMessageHeight = event.newRect.height;
   }
 
   connectInternal() {

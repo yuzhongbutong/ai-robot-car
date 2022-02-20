@@ -17,7 +17,7 @@ class LoginService:
         return settings.TOKEN_SCHEME + ' ' + token
 
     def verify_auth(self, username, cleartext):
-        if (getenv('RPI_DEVICE') == 'false'):
+        if getenv('RPI_DEVICE') == 'false':
             return True
         else:
             result = run_command('sudo cat /etc/shadow | grep -w ' + username)

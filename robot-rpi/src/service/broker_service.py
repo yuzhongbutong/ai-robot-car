@@ -7,15 +7,18 @@ import logging
 import random
 import threading
 import time
+from os import getenv
 import paho.mqtt.client as mqtt
 from flask import current_app
 from src.config import settings as config
 
 ####################
-from src.components.car import Car
-from src.components.buzzer import Buzzer
-from src.components.humiture import Humiture
-from src.components.ultrasonic import Ultrasonic
+is_rpi_device = getenv('RPI_DEVICE') != 'false'
+if is_rpi_device:
+    from src.components.car import Car
+    from src.components.buzzer import Buzzer
+    from src.components.humiture import Humiture
+    from src.components.ultrasonic import Ultrasonic
 ####################
 
 
@@ -37,10 +40,11 @@ class BrokerService:
         self.__socketio = current_app.extensions.get('socketio')
 
         ####################
-        self.__my_car = Car(config.GPIO_CAR)
-        self.__my_humiture = Humiture(config.GPIO_DHT11)
-        self.__my_buzzer = Buzzer(config.GPIO_BUZZER)
-        self.__my_ultrasonic = Ultrasonic(config.GPIO_HC)
+        if is_rpi_device:
+            self.__my_car = Car(config.GPIO_CAR)
+            self.__my_humiture = Humiture(config.GPIO_DHT11)
+            self.__my_buzzer = Buzzer(config.GPIO_BUZZER)
+            self.__my_ultrasonic = Ultrasonic(config.GPIO_HC)
         ####################
 
     def __on_connect(self, client, userdata, flags, rc):
@@ -58,9 +62,10 @@ class BrokerService:
                       (msg.topic, payload))
 
         ####################
-        data = json.loads(payload)
-        if 'car' in data:
-            self.__my_car.move_car(data['car']['direction'], self.__my_ultrasonic, self.__my_buzzer)
+        if is_rpi_device:
+            data = json.loads(payload)
+            if 'car' in data:
+                self.__my_car.move_car(data['car']['direction'], self.__my_ultrasonic, self.__my_buzzer)
         ####################
 
         client_type = client._userdata['client_type']
@@ -113,11 +118,13 @@ class BrokerService:
             
         def execute_collect():
             ####################
-            ht_data = self.__my_humiture.get_humiture()
+            if is_rpi_device:
+                ht_data = self.__my_humiture.get_humiture()
             ####################
             
             ####################
-            # ht_data = test_humiture()
+            if not is_rpi_device:
+                ht_data = test_humiture()
             ####################
             if ht_data is not None:
                 topic = config.MQTT_WATSON_TOPIC.format(event=config.MQTT_WATSON_EVENT_HUMITURE)

@@ -18,7 +18,6 @@ export class IntroductionComponent {
   private carouselSubject = new Subject<number>();
 
   constructor() {
-    const imageLength = this.images.length;
     this.carouselSubject.pipe(
       map((target: number) => {
         this.carouselCurrentIndex = this.currentIndex;
@@ -39,7 +38,7 @@ export class IntroductionComponent {
           if (this.isPauseRolling) {
             return EMPTY;
           } else {
-            const next = this.currentIndex >= imageLength - 1 ? 0 : this.currentIndex + 1;
+            const next = this.currentIndex >= this.images.length - 1 ? 0 : this.currentIndex + 1;
             return of(next);
           }
         }),
@@ -54,7 +53,7 @@ export class IntroductionComponent {
           this.carouselCurrentIndex = -1;
           this.carouselTargetIndex = -1;
         })
-      ).subscribe()
+      ).subscribe();
   }
 
   switchCarousel(index: number): string {

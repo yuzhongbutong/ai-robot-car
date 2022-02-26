@@ -27,7 +27,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Service
 public class IflytekVoiceServiceImpl implements VoiceService {
 
-	private Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+	private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
 	@Override
 	public String getTextByAudio(byte[] data) {

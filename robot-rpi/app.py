@@ -15,6 +15,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 import sqlite3
 from contextlib import closing
+
+load_dotenv()
 from src.config import settings as config
 from src.utils import message
 from src.service.login_service import LoginService
@@ -137,7 +139,6 @@ def event_connect():
 
 
 if __name__ == '__main__':
-    load_dotenv()
     env = getenv('FLASK_ENV', 'production')
     logging.debug('----------Run in main[' + env + ']----------')
     if env == 'production':

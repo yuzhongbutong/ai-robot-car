@@ -32,7 +32,7 @@ public class SocketHandlerController {
 	private MqttPushClient mqttPushClient;
 
 	@Autowired
-	@Qualifier("iflytekVoiceServiceImpl")
+	@Qualifier("iflytekIatServiceImpl")
 	private VoiceService voiceService;
 
 	private static List<SocketIOClient> clients = new ArrayList<SocketIOClient>();
@@ -76,17 +76,16 @@ public class SocketHandlerController {
 	}
 
 	@OnEvent(value = RobotConstant.SOCKET_EVENT_AUDIO)
-	public void onEventAudio(SocketIOClient socketIOClient, AckRequest ackRequest, byte[] data) throws JSONException {
+	public void onEventAudio(SocketIOClient socketIOClient, AckRequest ackRequest, byte[] data) throws Exception {
 		String strResult = this.voiceService.getTextByAudio(data);
 		JSONObject result = new JSONObject(strResult);
-		String text = result.getString("data");
 		JSONObject payload = new JSONObject();
-		if (text == null || "".equals(text)) {
-			payload.put("statusCode", 500);
-			payload.put("error", result.getString("desc"));
-		} else {
+		if (result.has("data")) {
 			payload.put("statusCode", 200);
-			payload.put("text", text);
+			payload.put("text", result.getString("data"));
+		} else {
+			payload.put("statusCode", 500);
+			payload.put("error", result.getString("error"));
 		}
 		socketIOClient.sendEvent(RobotConstant.SOCKET_EVENT_AUDIO, payload.toString());
 	}

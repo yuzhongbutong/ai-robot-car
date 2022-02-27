@@ -7,10 +7,13 @@
 
     nav,
     footer {
+        height: 24px;
         background-color: #2c3e50 !important;
     }
 
     .navbar {
+        height: 70px;
+
         .img-logo {
             width: 35px;
             margin-right: 10px;
@@ -74,6 +77,7 @@
         }
 
         article {
+            height: calc(100vh - 94px);
             flex: 1;
             overflow: auto;
         }
@@ -144,12 +148,20 @@
 @include media-breakpoint-down(sm) {
     .athena-main-root {
         .navbar {
+            height: 55px;
+
             .img-logo {
                 width: 25px;
             }
 
             .img-user {
                 height: 30px;
+            }
+        }
+
+        section {
+            article {
+                height: calc(100vh - 79px);
             }
         }
     }
